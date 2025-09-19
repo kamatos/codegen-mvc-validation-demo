@@ -16,7 +16,7 @@ import java.util.List;
 public class ItemsValidatorsRegistrar {
     private final List<ItemsControllerValidator> itemsControllerValidators;
 
-    public void initTodosControllerBinder(WebDataBinder binder) {
+    public void initItemsControllerBinder(WebDataBinder binder) {
         Object target = binder.getTarget();
         if (target == null) return;
 

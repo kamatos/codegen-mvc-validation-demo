@@ -61,7 +61,7 @@ public class MyResourceController implements MyResourceApi {
 
 **Example**: See test `updateItem_ShowcaseSeparatedValidations_NullEmail_ShouldReturnBadRequest_OnlyOneError` - when email is null, name validation is skipped.
 
-## Proposed Solution
+## Solution
 
 ### 1. Request Body Validation Strategy
 
@@ -281,3 +281,14 @@ The project includes comprehensive test cases demonstrating different validation
 - **ValidatedUpdateItemRequest**: `{ "name": "string", "email": "string" }`
 - **ItemResponse**: `{ "id": "uuid", "name": "string", "email": "string" }`
 - **ValidationErrorResponse**: `{ "errors": [{"code": "string", "message": "string"}] }`
+
+## References
+
+- **[Spring MVC Validation](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html)**  
+  Official Spring Framework documentation for validation in web MVC controllers
+
+- **[@InitBinder Annotation](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-initbinder.html)**  
+  Spring Framework reference for the `@InitBinder` annotation used for custom data binding
+
+- **[OpenAPI Generator - Spring](https://openapi-generator.tech/docs/generators/spring)**  
+  Official documentation for the Spring generator in OpenAPI Generator

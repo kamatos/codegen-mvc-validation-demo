@@ -29,7 +29,7 @@ public class ItemsController implements ItemsApi {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        validatorsRegistrar.initTodosControllerBinder(binder);
+        validatorsRegistrar.initItemsControllerBinder(binder);
     }
 
     @Override
