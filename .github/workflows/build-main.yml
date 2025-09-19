@@ -1,0 +1,41 @@
+name: Build main
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/dependabot.yml'
+      - '**/CODEOWNERS'
+      - '**/*.md'
+      - '**/*.img'
+      - '**/*.png'
+      - 'docs/**'
+      - '.git*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-an-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Build
+        shell: bash
+        run: |
+          mvn clean package -B --no-transfer-progress
+          
+      
+
+

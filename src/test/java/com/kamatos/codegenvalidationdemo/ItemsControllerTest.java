@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kamatos.codegenvalidationdemo.api.model.CreateItemRequest;
 import com.kamatos.codegenvalidationdemo.api.model.UpdateItemRequest;
 import com.kamatos.codegenvalidationdemo.api.model.ValidatedUpdateItemRequest;
+import com.kamatos.codegenvalidationdemo.api.model.ValidationError;
+import com.kamatos.codegenvalidationdemo.api.model.ValidationErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,13 +14,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.util.List;
 import java.util.UUID;
 
 import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,11 +78,19 @@ public class ItemsControllerTest {
 
     @Test
     void getItems_WithCustomConstraintOnEmail_ShouldReturnBadRequest() throws Exception {
-        mockMvc.perform(get("/api/items").param("email", "dummy@test.com"))
+        String content = mockMvc.perform(get("/api/items").param("email", "dummy@test.com"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", hasSize(2)))
-                .andExpectAll(errorMatcher(0, "email.format.name_lastname_required", "email.format.name_lastname_required"))
-                .andExpectAll(errorMatcher(1, "email.domain.blocked", "email.domain.blocked"));
+                .andReturn()
+                .getResponse().getContentAsString();
+
+        ValidationErrorResponse response = objectMapper.readValue(content, ValidationErrorResponse.class);
+        List<ValidationError> expectedErrors = List.of(
+                new ValidationError().code("email.format.name_lastname_required").message("email.format.name_lastname_required"),
+                new ValidationError().code("email.domain.blocked").message("email.domain.blocked")
+        );
+        assertThat(response.getErrors()).isNotNull()
+                .hasSize(2)
+                .containsExactlyInAnyOrderElementsOf(expectedErrors);
     }
 
     @Test

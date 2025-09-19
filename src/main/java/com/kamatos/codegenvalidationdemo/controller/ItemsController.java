@@ -9,13 +9,13 @@ import com.kamatos.codegenvalidationdemo.api.model.ValidationError;
 import com.kamatos.codegenvalidationdemo.exception.CustomValidationException;
 import com.kamatos.codegenvalidationdemo.validation.ItemsValidatorsRegistrar;
 import com.kamatos.codegenvalidationdemo.validation.NameValidator;
-import com.kamatos.codegenvalidationdemo.validation.constraint.ValidEmail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RestController;
+import com.kamatos.codegenvalidationdemo.validation.constraint.ValidEmail;
 
 import java.util.List;
 import java.util.UUID;
