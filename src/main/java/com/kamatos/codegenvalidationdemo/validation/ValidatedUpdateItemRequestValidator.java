@@ -1,20 +1,20 @@
 package com.kamatos.codegenvalidationdemo.validation;
 
-import com.kamatos.codegenvalidationdemo.api.model.UpdateNameRequest;
+import com.kamatos.codegenvalidationdemo.api.model.ValidatedUpdateItemRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 @Component
-public class UpdateNameRequestValidator implements ItemsControllerValidator {
+public class ValidatedUpdateItemRequestValidator implements ItemsControllerValidator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return UpdateNameRequest.class.isAssignableFrom(clazz);
+        return ValidatedUpdateItemRequest.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        UpdateNameRequest request = (UpdateNameRequest) target;
+        ValidatedUpdateItemRequest request = (ValidatedUpdateItemRequest) target;
 
         NameValidator.validateName(request.getName(), errors);
     }

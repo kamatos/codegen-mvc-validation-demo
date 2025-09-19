@@ -13,6 +13,31 @@ tags:
 
 paths:
   /api/items:
+    get:
+      operationId: getItems
+      tags:
+        - items
+      parameters:
+        - name: email
+          in: query
+          description: Filter by email
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
     post:
       operationId: createItem
       tags:
@@ -37,9 +62,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ValidationErrorResponse'
 
-  /api/items/{id}/name:
-    put:
-      operationId: updateItemName
+  /api/items/{id}:
+    patch:
+      operationId: validatedUpdateItem
       tags:
         - items
       parameters:
@@ -55,10 +80,41 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateNameRequest'
+              $ref: '#/components/schemas/ValidatedUpdateItemRequest'
       responses:
         '200':
-          description: Status updated successfully
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+    put:
+      operationId: updateItem
+      tags:
+        - items
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the item
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemRequest'
+      responses:
+        '200':
+          description: Success
           content:
             application/json:
               schema:
@@ -79,6 +135,8 @@ components:
           type: string
           format: uuid
         name:
+          type: string
+        email:
           type: string
 
     CreateItemRequest:
@@ -104,6 +162,28 @@ components:
           type: string
           minLength: 1
           maxLength: 30
+
+    UpdateItemRequest:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+
+    ValidatedUpdateItemRequest:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+        email:
+          type: string
 
     ValidationErrorResponse:
       type: object
